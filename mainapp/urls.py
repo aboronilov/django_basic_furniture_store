@@ -20,11 +20,13 @@ from django.urls import path, include
 import mainapp.views as mainapp
 from geekshop import settings
 
+app_name = 'mainapp'
+
 urlpatterns = [
-    path('', include('mainapp.urls', namespace='main')),
-    path('admin/', admin.site.urls),
-    path('auth/', include('authapp.urls', namespace='auth'))
+    path('', mainapp.index, name='index'),
+    path('products/', mainapp.products, name='products'),
+    path('contact/', mainapp.contact, name='contact'),
+
+    path('category/<int:pk>/', mainapp.category, name='category'),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -17,14 +17,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-import mainapp.views as mainapp
+import authapp.views as authapp
 from geekshop import settings
 
+app_name = 'authapp'
+
 urlpatterns = [
-    path('', include('mainapp.urls', namespace='main')),
-    path('admin/', admin.site.urls),
-    path('auth/', include('authapp.urls', namespace='auth'))
+    path('login/', authapp.login, name='login'),
+    path('logout/', authapp.logout, name='logout'),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

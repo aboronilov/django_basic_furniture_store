@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from mainapp.models import Product
+from mainapp.models import Product, ProductCategory
 
 
 def index(request):
@@ -18,9 +18,12 @@ def products(request):
             'modern': 'модерн',
             'classic': 'классика'}
 
+    categories = ProductCategory.objects.all()
+
     context = {
         'page_title': 'каталог',
-        'product_1': product_1
+        'product_1': product_1,
+        'categories': categories
     }
 
     return render(request, 'mainapp/products.html', context)
@@ -47,3 +50,7 @@ def contact(request):
         'locations': locations,
     }
     return render(request, 'mainapp/contact.html', context)
+
+
+def category(request, pk):
+    pass
