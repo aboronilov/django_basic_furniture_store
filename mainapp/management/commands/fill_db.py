@@ -25,7 +25,5 @@ class Command(BaseCommand):
             item['category'] = category
             Product.objects.create(**item)
 
-        # len(Product.objects.filter(category=1))
-        # Product.objects.filter(category=1).count()
         if not ShopUser.objects.filter(username='django').exists():
             ShopUser.objects.create_superuser('django', 'django@gb.local', 'geekbrains')
