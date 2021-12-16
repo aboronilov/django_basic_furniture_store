@@ -23,7 +23,8 @@ from geekshop import settings
 urlpatterns = [
     path('', include('mainapp.urls', namespace='main')),
     path('admin/', admin.site.urls),
-    path('auth/', include('authapp.urls', namespace='auth'))
+    path('auth/', include('authapp.urls', namespace='auth')),
+    path('basket/', include('basketapp.urls', namespace='basket')),
 ]
 
 if settings.DEBUG:
