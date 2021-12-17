@@ -1,11 +1,22 @@
+import random
 from django.shortcuts import render, get_object_or_404
-
 from mainapp.models import Product, ProductCategory
 
 
 def get_menu():
     categories = ProductCategory.objects.all()
     return categories
+
+
+def get_hot_product():
+    product_ids = Product.objects.values_list('id', flat=True).all()
+    random_id = random.choice(product_ids)
+    return Product.objects.get(pk=random_id)
+
+
+def same_products(hot_product):
+    return Product.objects.filter(category=hot_product.category). \
+               exclude(pk=hot_product.pk)[:3]
 
 
 def index(request):
@@ -16,10 +27,11 @@ def index(request):
 
 
 def products(request):
-    product_1 = Product.objects.all()[0]
+    hot_product = get_hot_product()
     context = {
         'page_title': 'каталог',
-        'product_1': product_1,
+        'hot_product': hot_product,
+        'same_products': same_products(hot_product),
         'categories': get_menu(),
     }
     return render(request, 'mainapp/products.html', context)
@@ -63,3 +75,13 @@ def category(request, pk):
         'products': products,
     }
     return render(request, 'mainapp/category_products.html', context)
+
+
+def product_page(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    context = {
+        'page_title': 'страница товара',
+        'product': product,
+        'categories': get_menu(),
+    }
+    return render(request, 'mainapp/product_page.html', context)
