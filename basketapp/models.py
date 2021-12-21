@@ -13,6 +13,9 @@ class BasketItem(models.Model):
     add_dt = models.DateTimeField('время', auto_now_add=True)
     update_dt = models.DateTimeField('время', auto_now=True)
 
-    @property  # не особо и нужен
+    # def basket_price(self):
+    #     return sum(el.price for el in basket)
+
+    @property
     def product_cost(self):
         return self.product.price * self.qty

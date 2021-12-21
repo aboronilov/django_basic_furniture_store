@@ -1,17 +1,19 @@
 import random
+
 from django.shortcuts import render, get_object_or_404
+
 from mainapp.models import Product, ProductCategory
 
 
 def get_menu():
-    categories = ProductCategory.objects.all()
-    return categories
+    return ProductCategory.objects.all()
 
 
 def get_hot_product():
     product_ids = Product.objects.values_list('id', flat=True).all()
     random_id = random.choice(product_ids)
     return Product.objects.get(pk=random_id)
+    # return random.choice(Product.objects.all())
 
 
 def same_products(hot_product):
@@ -27,14 +29,51 @@ def index(request):
 
 
 def products(request):
+    # basket = BasketItem.objects.fiter(user=request.user)
+    # basket_price = sum(el.product.price for el in basket)
     hot_product = get_hot_product()
     context = {
         'page_title': 'каталог',
         'hot_product': hot_product,
         'same_products': same_products(hot_product),
         'categories': get_menu(),
+        # 'basket': basket,
     }
     return render(request, 'mainapp/products.html', context)
+
+
+def category(request, pk):
+    # pk = int(pk)
+    if pk == 0:
+        category = {'pk': 0, 'name': 'все'}
+        products = Product.objects.all()
+    else:
+        # try:
+        #     category = ProductCategory.objects.get(pk=pk)
+        # category = ProductCategory.objects.filter(pk=pk).first()
+        # if category is None:
+        #     pass
+        category = get_object_or_404(ProductCategory, pk=pk)
+        # products = Product.objects.filter(category=category)
+        products = category.product_set.all()
+
+    context = {
+        'page_title': 'товары категории',
+        'categories': get_menu(),
+        'category': category,
+        'products': products,
+    }
+    return render(request, 'mainapp/category_products.html', context)
+
+
+def product_page(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    context = {
+        'page_title': 'страница продукта',
+        'product': product,
+        'categories': get_menu(),
+    }
+    return render(request, 'mainapp/product_page.html', context)
 
 
 def contact(request):
@@ -58,30 +97,3 @@ def contact(request):
         'locations': locations,
     }
     return render(request, 'mainapp/contact.html', context)
-
-
-def category(request, pk):
-    if pk == 0:
-        category = {'pk': 0, 'name': 'все'}
-        products = Product.objects.all()
-    else:
-        category = get_object_or_404(ProductCategory, pk=pk)
-        products = category.product_set.all()
-
-    context = {
-        'page_title': 'товары категории',
-        'categories': get_menu(),
-        'category': category,
-        'products': products,
-    }
-    return render(request, 'mainapp/category_products.html', context)
-
-
-def product_page(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    context = {
-        'page_title': 'страница товара',
-        'product': product,
-        'categories': get_menu(),
-    }
-    return render(request, 'mainapp/product_page.html', context)

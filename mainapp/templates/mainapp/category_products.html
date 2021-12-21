@@ -19,14 +19,13 @@
                         <a href="{% url 'main:product_page' item.pk %}">
                             <img src="/media/{{ item.image }}" alt="">
                             <div class="text">
-                                 <img src="{% static 'img/icon-hover.png' %}" alt="img">
-                                 <h4>{{ item.name }}</h4>
-                                 <p>{{ item.short_desc }}</p>
+                                <img src="/static/img/icon-hover.png" alt="img">
+                                <h4>{{ item.name }}</h4>
+                                <p>{{ item.short_desc }}</p>
                             </div>
                         </a>
                     </div>
                 {% endfor %}
-
             </div>
         </div>
     </div>

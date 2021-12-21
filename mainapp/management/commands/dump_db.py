@@ -15,18 +15,23 @@
 #     help = 'Dump data from db'
 #
 #     def handle(self, *args, **options):
-#         schema = ('name', 'description', 'short_desc')
+#         product_schema = {'name', 'description', 'short_desc'}
 #         items = []
 #         for item in ProductCategory.objects.all():
+#             # print(item.__dict__)
+#             # print(vars(item))
 #             items.append({key: val
 #                           for key, val in vars(item).items()
-#                           if key in schema})
+#                           if key in product_schema})
+#         print(items)
 #
-#         items = write_to_pickle('mainapp/json/products.json')
-#         for item in items:
-#             category = ProductCategory.objects.get(name=item['category'])
-#             item['category'] = category
-#             Product.objects.create(**item)
-#
-#         if not ShopUser.objects.filter(username='django').exists():
-#             ShopUser.objects.create_superuser('django', 'django@gb.local', 'geekbrains')
+#         # items = load_from_json('mainapp/json/products.json')
+#         # for item in items:
+#         #     category = ProductCategory.objects.get(name=item['category'])
+#         #     item['category'] = category
+#         #     Product.objects.create(**item)
+#         #
+#         # # len(Product.objects.filter(category=1))
+#         # # Product.objects.filter(category=1).count()
+#         # if not ShopUser.objects.filter(username='django').exists():
+#         #     ShopUser.objects.create_superuser('django', 'django@gb.local', 'geekbrains')
