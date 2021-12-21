@@ -6,13 +6,14 @@
                 все
             </a>
         </li>
+
         {% for item in categories %}
-        <li>
-            <a href="{% url 'main:category' item.pk %}"
-                class="{% if request.resolver_match.url_name == 'category' and request.resolver_match.kwargs.pk == item.pk %}active{% endif %}">
-                {{ item.name }}
-            </a>
-        </li>
+            <li>
+                <a href="{% url 'main:category' item.pk %}"
+                   class="{% if request.resolver_match.url_name == 'category' and request.resolver_match.kwargs.pk == item.pk %}active{% endif %}">
+                    {{ item.name }}
+                </a>
+            </li>
         {% endfor %}
     </ul>
 </div>
