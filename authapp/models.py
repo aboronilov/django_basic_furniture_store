@@ -11,9 +11,3 @@ class ShopUser(AbstractUser):
 
     def basket_qty(self):
         return sum(el.qty for el in self.basket.all())
-
-    # def delete(self, using=None, keep_parents=False):
-    #     pass
-
-
-# 7 min -> 20:10 AIR
