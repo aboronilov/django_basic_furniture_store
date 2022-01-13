@@ -1,3 +1,9 @@
 from django.test import TestCase
 
-# Create your tests here.
+from authapp.models import ShopUser
+
+
+class ModelTests(TestCase):
+    def test_user_has_age(self):
+        user = ShopUser.objects.create(age=23)
+        self.assertIsNotNone(user.age)

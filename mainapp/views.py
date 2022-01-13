@@ -14,7 +14,6 @@ def get_hot_product():
     product_ids = Product.objects.values_list('id', flat=True).all()
     random_id = random.choice(product_ids)
     return Product.objects.get(pk=random_id)
-    # return random.choice(Product.objects.all())
 
 
 def same_products(hot_product):
@@ -30,15 +29,12 @@ def index(request):
 
 
 def products(request):
-    # basket = BasketItem.objects.fiter(user=request.user)
-    # basket_price = sum(el.product.price for el in basket)
     hot_product = get_hot_product()
     context = {
         'page_title': 'каталог',
         'hot_product': hot_product,
         'same_products': same_products(hot_product),
         'categories': get_menu(),
-        # 'basket': basket,
     }
     return render(request, 'mainapp/products.html', context)
 

@@ -1,0 +1,14 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?0JDQutGC0LjQstCw0YbQuNGPINC/0L7Qu9GM0LfQvtCy0LDRgtC10LvRjyDQt9C4?=
+ =?utf-8?b?0L3QsNC40LTQsDc=?=
+From: admin@localhost
+To: zinaida7@localhost
+Date: Thu, 13 Jan 2022 09:26:08 -0000
+Message-ID: <164206596830.16396.1937943900018222033@PS2020XZYSQSPF>
+
+Для активации пользователя зинаида7 на портале http://localhost:8000 перейдите по ссылке 
+http://localhost:8000/auth/verify/zinaida7@localhost/5a8c28d40d35f4962e5f737f6d8a6e1fdc4ab887/
+-------------------------------------------------------------------------------
