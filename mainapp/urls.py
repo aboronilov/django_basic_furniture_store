@@ -10,7 +10,6 @@ urlpatterns = [
     path('contact/', mainapp.contact, name='contact'),
 
     path('category/<int:pk>/', mainapp.category, name='category'),
-    # re_path('category/(?P<pk>\d+)/$', mainapp.category, name='category'),
     path('product/<int:pk>/', mainapp.product_page, name='product_page'),
 
 ]

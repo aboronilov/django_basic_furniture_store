@@ -4,11 +4,11 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from authapp.forms import ShopUserLoginForm, ShopUserCreationForm, ShopUserChangeForm
+from authapp.models import ShopUser
+from authapp.utils import send_verify_email
 
 
 def login(request):
-    # ?next=/basket/add/4/
-    # redirect_to = request.GET['next']
     redirect_to = request.GET.get('next', '')
 
     if request.method == 'POST':
@@ -41,7 +41,8 @@ def register(request):
     if request.method == 'POST':
         form = ShopUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            send_verify_email(user)
             return HttpResponseRedirect(reverse('auth:login'))
     else:
         form = ShopUserCreationForm()
@@ -68,3 +69,20 @@ def edit(request):
         'form': form,
     }
     return render(request, 'authapp/update.html', context)
+
+
+def verify(request, email, activation_key):
+    try:
+        user = ShopUser.objects.get(email=email)
+        if user.activation_key == activation_key and not user.is_activation_expired():
+            user.is_active = True
+            user.save()
+            auth.login(request, user)
+            return render(request, 'authapp.verification.html')
+        else:
+            print(f'Ошибка авторизации {user}')
+            return render(request, 'authapp.verification.html')
+    except Exception as e:
+        print(f'Ошибка авторизации {e.args}')
+        return HttpResponseRedirect(reverse('main:index'))
+
