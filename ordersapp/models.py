@@ -1,4 +1,8 @@
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+from basketapp.models import BasketItem
 from geekshop import settings
 from mainapp.models import Product
 
@@ -56,6 +60,14 @@ class Order(models.Model):
         self.save()
 
 
+class OrderItemQuerySet(models.QuerySet):
+    def delete(self, *args, **kwargs):
+        for item in self:
+            item.product.quantity += item.quantity
+            item.product.save()
+        super().delete(*args, **kwargs)
+
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,
                               related_name="orderitems",
@@ -66,7 +78,32 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(verbose_name='количество',
                                            default=0)
 
+    # objects = OrderItemQuerySet.as_manager()
+
     def get_product_cost(self):
         return self.product.price * self.quantity
+
+
+@receiver(pre_save, sender=OrderItem)
+@receiver(pre_save, sender=BasketItem)
+def product_quantity_update_save(sender, update_fields, instance, **kwargs):
+    if update_fields is 'quantity' or 'product':
+        if instance.pk:
+            instance.product.quantity -= instance.quantity - sender.objects.get(pk=instance.pk).quantity
+        else:
+            instance.product.quantity -= instance.quantity
+        instance.product.save()
+
+
+@receiver(pre_save, sender=OrderItem)
+@receiver(pre_save, sender=BasketItem)
+def product_quantity_update_save(sender, instance, **kwargs):
+    instance.product.quantity += instance.quantity
+    instance.product.save()
+
+
+
+
+
 
 

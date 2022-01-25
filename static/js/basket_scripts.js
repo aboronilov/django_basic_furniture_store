@@ -21,5 +21,6 @@ window.onload = function () {
         // send to backend
         // get from backend
         // do smth in DOM
+        event.preventDefault()
     });
 }
