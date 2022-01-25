@@ -26,4 +26,4 @@ class OrderItemForm(forms.ModelForm):
             if field_name == 'price':
                 field.widget.attrs['readonly'] = 'true'
 
-    # 1:35
+

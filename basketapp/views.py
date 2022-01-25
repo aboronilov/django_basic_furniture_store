@@ -30,7 +30,7 @@ def add(request, product_pk):
         user=request.user,
         product_id=product_pk
     )
-    basket_item.qty += 1
+    basket_item.quantity += 1
     basket_item.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -43,15 +43,15 @@ def remove(request, basket_item_pk):
     return HttpResponseRedirect(reverse('basket:index'))
 
 
-def update(request, basket_item_pk, qty):
+def update(request, basket_item_pk, quantity):
     if request.is_ajax():
         item = BasketItem.objects.filter(pk=basket_item_pk).first()
         if not item:
             return JsonResponse({'status': False})
-        if qty == 0:
+        if quantity == 0:
             item.delete()
         else:
-            item.qty = qty
+            item.quantity = quantity
             item.save()
         basket_summary_html = render_to_string(
             'basketapp/includes/basket_summary.html',
@@ -62,6 +62,6 @@ def update(request, basket_item_pk, qty):
                              'basket_summary': basket_summary_html,
                              # 'basket_item_pk': basket_item_pk,
                              # 'product_cost': basket_summary_html,
-                             'qty': qty})
-        # 'total_qty': 15,
+                             'quantity': quantity})
+        # 'total_quantity': 15,
         # 'total_price': 5987.5})
