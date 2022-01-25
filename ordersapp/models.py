@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
 from geekshop import settings
 from mainapp.models import Product
 
@@ -56,6 +59,14 @@ class Order(models.Model):
         self.save()
 
 
+class OrderItemQuerySet(models.QuerySet):
+    def delete(self, *args, **kwargs):
+        for item in self:
+            item.product.quantity += item.quantity
+            item.product.save()
+        super().delete(*args, **kwargs)
+
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,
                               related_name="orderitems",
@@ -66,7 +77,13 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(verbose_name='количество',
                                            default=0)
 
+    # objects = OrderItemQuerySet.as_manager()
+
     def get_product_cost(self):
         return self.product.price * self.quantity
+
+
+
+
 
 
