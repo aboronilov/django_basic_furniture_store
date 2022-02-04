@@ -1,25 +1,32 @@
 import random
 
+from django.core.cache import cache
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
+from django.views.decorators.cache import cache_page
 
 from mainapp.models import Product, ProductCategory
 
 
+@cache_page(60*15)
 def get_menu():
     return ProductCategory.objects.all()
+
 
 
 def get_hot_product():
     product_ids = Product.objects.values_list('id', flat=True).all()
     random_id = random.choice(product_ids)
     return Product.objects.get(pk=random_id)
-    # return random.choice(Product.objects.all())
 
 
+@cache_page(60*15)
 def same_products(hot_product):
-    return Product.objects.filter(category=hot_product.category). \
-               exclude(pk=hot_product.pk)[:3]
+    similar = cache.get('similar')
+    if not similar:
+        similar = Product.objects.filter(category=hot_product.category).exclude(pk=hot_product.pk)[:3]
+        cache.set('similar', similar, 60*15)
+    return similar
 
 
 def index(request):
@@ -29,18 +36,17 @@ def index(request):
     return render(request, 'mainapp/index.html', context)
 
 
+
 def products(request):
-    # basket = BasketItem.objects.fiter(user=request.user)
-    # basket_price = sum(el.product.price for el in basket)
     hot_product = get_hot_product()
     context = {
         'page_title': 'каталог',
         'hot_product': hot_product,
         'same_products': same_products(hot_product),
         'categories': get_menu(),
-        # 'basket': basket,
     }
     return render(request, 'mainapp/products.html', context)
+
 
 
 def category(request, pk):
@@ -69,6 +75,7 @@ def category(request, pk):
     return render(request, 'mainapp/category_products.html', context)
 
 
+@cache_page(60*15)
 def product_page(request, pk):
     product = get_object_or_404(Product, pk=pk)
     context = {
@@ -79,6 +86,7 @@ def product_page(request, pk):
     return render(request, 'mainapp/product_page.html', context)
 
 
+@cache_page(60*15)
 def contact(request):
     locations = [
         {'city': 'Москва',
